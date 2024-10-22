@@ -1,33 +1,28 @@
 #include "game_engine.hpp"
 
-// Constructor parametrizat
 GameEngine::GameEngine(Player player1, Player player2)
     : _player1(player1), _player2(player2), _currentPlayer(&_player1) {}
 
-// Constructor de copiere
 GameEngine::GameEngine(const GameEngine& other)
     : _board(other._board), _player1(other._player1), _player2(other._player2),
       _currentPlayer(other._currentPlayer == &other._player1 ? &_player1 : &_player2) {}
 
 GameEngine& GameEngine::operator=(const GameEngine& other) {
-    if (this != &other) { // Self-assignment check
-        _board = other._board; // Copy the board state
-        _player1 = other._player1; // Copy player 1
-        _player2 = other._player2; // Copy player 2
+    if (this != &other) { 
+        _board = other._board; 
+        _player1 = other._player1; 
+        _player2 = other._player2;
         
-        // Update current player pointer
         _currentPlayer = (other._currentPlayer == &other._player1) ? &_player1 : &_player2;
     }
-    return *this; // Return the current object
+    return *this; 
 }
 
-// Operator de comparație
 bool GameEngine::operator==(const GameEngine& other) const {
     return _board == other._board && _player1 == other._player1 &&
            _player2 == other._player2 && _currentPlayer == other._currentPlayer;
 }
 
-// Operator de citire
 std::istream& operator>>(std::istream& in, GameEngine& engine) {
     in >> engine._board >> engine._player1 >> engine._player2;
     
@@ -38,7 +33,6 @@ std::istream& operator>>(std::istream& in, GameEngine& engine) {
     return in;
 }
 
-// Operator de afișare
 std::ostream& operator<<(std::ostream& out, const GameEngine& engine) {
     out << "Board:\n" << engine._board;
     out << "Player 1: " << engine._player1.GetSymbol() << "\n";
@@ -47,13 +41,11 @@ std::ostream& operator<<(std::ostream& out, const GameEngine& engine) {
     return out;
 }
 
-// Inițializare joc
 void GameEngine::Init() {
-    _board = Board(); // Initializează tabla de joc
-    _currentPlayer = &_player1; // Începem cu jucătorul 1
+    _board = Board(); 
+    _currentPlayer = &_player1; 
 }
 
-// Rularea jocului
 void GameEngine::Run() {
     Init();
     while (!CheckGameOver()) {
