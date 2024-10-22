@@ -11,20 +11,14 @@ class GameEngine {
     Player* _currentPlayer;
 
 public:
-    // Constructori
-    GameEngine() : _currentPlayer(nullptr) {} // Constructor implicit
+    GameEngine() : _currentPlayer(nullptr) {} 
     GameEngine(Player player1, Player player2);
 
-    // Constructor de copiere
     GameEngine(const GameEngine& other);
 
-    // Operator de atribuire
     GameEngine& operator=(const GameEngine& other);
 
-    // Operator de comparație
     bool operator==(const GameEngine& other) const;
-
-    // Suprascriere operatori de citire și afișare
     friend std::istream& operator>>(std::istream& in, GameEngine& engine);
     friend std::ostream& operator<<(std::ostream& out, const GameEngine& engine);
 
