@@ -2,9 +2,11 @@
 
 #include "board.hpp"
 #include "cell.hpp"
+#include "painter_abstract.hpp"
 
-class Painter {
+class Painter : public AbstractPainter {
 public:
-    void DrawBoard(const Board& board);
-    void WriteText(int x, int y, const char* text);
+    void DrawBoard(const Board& board) override; 
+    void WriteText(int x, int y, const char* text) override; 
 };
+
