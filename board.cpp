@@ -1,6 +1,5 @@
 #include "board.hpp"
 
-// Constructor implicit
 Board::Board() : size(3) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
@@ -9,7 +8,6 @@ Board::Board() : size(3) {
     }
 }
 
-// Constructor cu parametri
 Board::Board(int size) : size(size) {
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
@@ -18,7 +16,6 @@ Board::Board(int size) : size(size) {
     }
 }
 
-// Constructor de copiere
 Board::Board(const Board& other) : size(other.size) {
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
@@ -27,7 +24,6 @@ Board::Board(const Board& other) : size(other.size) {
     }
 }
 
-// Operator de atribuire
 Board& Board::operator=(const Board& other) {
     if (this != &other) {
         size = other.size;
@@ -40,7 +36,6 @@ Board& Board::operator=(const Board& other) {
     return *this;
 }
 
-// Operator de egalitate
 bool Board::operator==(const Board& other) const {
     if (size != other.size) return false;
     for (int i = 0; i < size; ++i) {
@@ -53,17 +48,14 @@ bool Board::operator==(const Board& other) const {
     return true;
 }
 
-// Setarea unei celule
 void Board::SetCell(int row, int col, CellState state) {
     _cells[row][col].SetState(state);
 }
 
-// Obținerea stării unei celule
 CellState Board::GetCell(int row, int col) const {
     return _cells[row][col].GetState();
 }
 
-// Verifică dacă tabla este plină
 bool Board::IsFull() const {
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
@@ -75,15 +67,11 @@ bool Board::IsFull() const {
     return true;
 }
 
-// Verifică dacă un jucător a câștigat
 bool Board::CheckWin(CellState state) const {
-    // Verifică rânduri
     for (int i = 0; i < size; ++i) {
         if (std::all_of(_cells[i], _cells[i] + size, [state](const Cell& cell) { return cell.GetState() == state; })) {
             return true;
         }
-    }
-    // Verifică coloane
     for (int j = 0; j < size; ++j) {
         bool win = true;
         for (int i = 0; i < size; ++i) {
@@ -94,7 +82,6 @@ bool Board::CheckWin(CellState state) const {
         }
         if (win) return true;
     }
-    // Verifică diagonale
     bool diagonalWin1 = true, diagonalWin2 = true;
     for (int i = 0; i < size; ++i) {
         if (_cells[i][i].GetState() != state) diagonalWin1 = false;
@@ -102,8 +89,6 @@ bool Board::CheckWin(CellState state) const {
     }
     return diagonalWin1 || diagonalWin2;
 }
-
-// Operator de intrare (citire din flux)
 std::istream& operator>>(std::istream& in, Board& board) {
     for (int i = 0; i < board.size; ++i) {
         for (int j = 0; j < board.size; ++j) {
@@ -114,8 +99,6 @@ std::istream& operator>>(std::istream& in, Board& board) {
     }
     return in;
 }
-
-// Operator de ieșire (afișare în flux)
 std::ostream& operator<<(std::ostream& out, const Board& board) {
     for (int i = 0; i < board.size; ++i) {
         for (int j = 0; j < board.size; ++j) {
