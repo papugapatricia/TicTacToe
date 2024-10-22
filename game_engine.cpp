@@ -49,22 +49,15 @@ void GameEngine::Init() {
 void GameEngine::Run() {
     Init();
     while (!CheckGameOver()) {
-        // Cod pentru a rula turul jocului, inclusiv obținerea mutării de la jucător
-        // Exemplu: _currentPlayer->MakeMove(_board, row, col);
         SwitchPlayer();
     }
 }
-
-// Schimbă jucătorul curent
 void GameEngine::SwitchPlayer() {
     _currentPlayer = (_currentPlayer == &_player1) ? &_player2 : &_player1;
 }
-
-// Verifică dacă jocul s-a terminat
 bool GameEngine::CheckGameOver() const {
-    // Convert player symbols to CellState
-    CellState player1Symbol = (_player1.GetSymbol() == 'X') ? CellState::X : CellState::O; // Adjust based on your CellState definition
-    CellState player2Symbol = (_player2.GetSymbol() == 'X') ? CellState::X : CellState::O; // Adjust based on your CellState definition
+    CellState player1Symbol = (_player1.GetSymbol() == 'X') ? CellState::X : CellState::O; 
+    CellState player2Symbol = (_player2.GetSymbol() == 'X') ? CellState::X : CellState::O; 
     
     return _board.CheckWin(player1Symbol) || _board.CheckWin(player2Symbol) || _board.IsFull();
 }
