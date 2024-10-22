@@ -1,18 +1,14 @@
 #include "board.hpp"
 
 class Player {
-    CellState _symbol; // Member variable to hold the player's symbol
+    CellState _symbol; 
 public:
-    // Constructor implicit
     Player() : _symbol(CellState::Empty) {}
 
-    // Constructor cu parametri
     Player(CellState symbol) : _symbol(symbol) {}
 
-    // Constructor de copiere
     Player(const Player& other) : _symbol(other._symbol) {}
 
-    // Operator de atribuire
     Player& operator=(const Player& other) {
         if (this != &other) {
             _symbol = other._symbol;
@@ -20,7 +16,6 @@ public:
         return *this;
     }
 
-    // Getter for the symbol
     char GetSymbol() const {
         switch (_symbol) {
             case CellState::X:
@@ -30,16 +25,14 @@ public:
             case CellState::Empty:
                 return ' ';
             default:
-                return ' '; // Handle error
+                return ' '; 
         }
     }
 
-    // Operator de comparație
     bool operator==(const Player& other) const {
         return _symbol == other._symbol; 
     }
 
-    // Input operator
     friend std::istream& operator>>(std::istream& in, Player& player) {
         char symbol;
         in >> symbol;
@@ -48,12 +41,11 @@ public:
         } else if (symbol == 'O') {
             player._symbol = CellState::O;
         } else {
-            player._symbol = CellState::Empty; // Handle invalid input if necessary
+            player._symbol = CellState::Empty; 
         }
         return in;
     }
 
-    // Output operator (optional)
     friend std::ostream& operator<<(std::ostream& out, const Player& player) {
         out << player.GetSymbol();
         return out;
