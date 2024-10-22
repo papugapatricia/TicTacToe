@@ -1,17 +1,20 @@
-#include "painter.hpp"
-#include <iostream>
+#include "player.hpp"
 
-void Painter::DrawBoard(const Board& board) {
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            char symbol;
-            switch (board.GetCell(i, j)) {
-                case CellState::X: symbol = 'X'; break;
-                case CellState::O: symbol = 'O'; break;
-                default: symbol = '.'; break; 
-            }
-            std::cout << symbol << ' ';
-        }
-        std::cout << std::endl;
+// Constructor implicit
+Player::Player(CellState symbol) : _symbol(symbol) {}
+
+// Constructor de copiere
+Player::Player(const Player& other) : _symbol(other._symbol) {}
+
+Player& Player::operator=(const Player& other) {
+    if (this != &other) { // Check for self-assignment
+        _symbol = other._symbol;
     }
+    return *this; // Return a reference to the current object
+}
+
+
+// Operator de egalitate
+bool Player::operator==(const Player& other) const {
+    return _symbol == other._symbol;
 }

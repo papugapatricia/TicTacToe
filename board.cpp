@@ -1,6 +1,7 @@
 #include "board.hpp"
 
-Board::Board() {
+// Constructor implicit
+Board::Board() : size(3) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             _cells[i][j] = {i, j, CellState::Empty};
@@ -8,23 +9,43 @@ Board::Board() {
     }
 }
 
-void Board::SetCell(int row, int col, CellState state) {
-    if (row >= 0 && row < 3 && col >= 0 && col < 3) {
-        _cells[row][col].state = state;
+// Constructor cu parametri
+Board::Board(int size) : size(size) {
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            _cells[i][j] = {i, j, CellState::Empty};
+        }
     }
 }
 
-CellState Board::GetCell(int row, int col) const {
-    if (row >= 0 && row < 3 && col >= 0 && col < 3) {
-        return _cells[row][col].state;
+// Constructor de copiere
+Board::Board(const Board& other) : size(other.size) {
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            _cells[i][j] = other._cells[i][j];
+        }
     }
-    return CellState::Empty; 
 }
 
-bool Board::IsFull() const {
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            if (_cells[i][j].state == CellState::Empty) {
+// Operator de atribuire
+Board& Board::operator=(const Board& other) {
+    if (this != &other) {
+        size = other.size;
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                _cells[i][j] = other._cells[i][j];
+            }
+        }
+    }
+    return *this;
+}
+
+// Operator de egalitate
+bool Board::operator==(const Board& other) const {
+    if (size != other.size) return false;
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (!(_cells[i][j] == other._cells[i][j])) {
                 return false;
             }
         }
@@ -32,24 +53,89 @@ bool Board::IsFull() const {
     return true;
 }
 
-bool Board::CheckWin(CellState state) const {
-    for (int i = 0; i < 3; ++i) {
-        if (_cells[i][0].state == state && _cells[i][1].state == state && _cells[i][2].state == state) {
-            return true;
-             }
-    }
+// Setarea unei celule
+void Board::SetCell(int row, int col, CellState state) {
+    _cells[row][col].SetState(state);
+}
 
-    for (int j = 0; j < 3; ++j) {
-        if (_cells[0][j].state == state && _cells[1][j].state == state && _cells[2][j].state == state) {
+// Obținerea stării unei celule
+CellState Board::GetCell(int row, int col) const {
+    return _cells[row][col].GetState();
+}
+
+// Verifică dacă tabla este plină
+bool Board::IsFull() const {
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (_cells[i][j].GetState() == CellState::Empty) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Verifică dacă un jucător a câștigat
+bool Board::CheckWin(CellState state) const {
+    // Verifică rânduri
+    for (int i = 0; i < size; ++i) {
+        if (std::all_of(_cells[i], _cells[i] + size, [state](const Cell& cell) { return cell.GetState() == state; })) {
             return true;
         }
     }
-    
-    if (_cells[0][0].state == state && _cells[1][1].state == state && _cells[2][2].state == state) {
-        return true;
+    // Verifică coloane
+    for (int j = 0; j < size; ++j) {
+        bool win = true;
+        for (int i = 0; i < size; ++i) {
+            if (_cells[i][j].GetState() != state) {
+                win = false;
+                break;
+            }
+        }
+        if (win) return true;
     }
-    if (_cells[0][2].state == state && _cells[1][1].state == state && _cells[2][0].state == state) {
-        return true;
+    // Verifică diagonale
+    bool diagonalWin1 = true, diagonalWin2 = true;
+    for (int i = 0; i < size; ++i) {
+        if (_cells[i][i].GetState() != state) diagonalWin1 = false;
+        if (_cells[i][size - 1 - i].GetState() != state) diagonalWin2 = false;
     }
-    return false;
+    return diagonalWin1 || diagonalWin2;
+}
+
+// Operator de intrare (citire din flux)
+std::istream& operator>>(std::istream& in, Board& board) {
+    for (int i = 0; i < board.size; ++i) {
+        for (int j = 0; j < board.size; ++j) {
+            CellState state;
+            in >> state;
+            board.SetCell(i, j, state);
+        }
+    }
+    return in;
+}
+
+// Operator de ieșire (afișare în flux)
+std::ostream& operator<<(std::ostream& out, const Board& board) {
+    for (int i = 0; i < board.size; ++i) {
+        for (int j = 0; j < board.size; ++j) {
+            CellState state = board.GetCell(i, j);
+            char symbol;
+            switch (state) {
+                case CellState::X:
+                    symbol = 'X';
+                    break;
+                case CellState::O:
+                    symbol = 'O';
+                    break;
+                case CellState::Empty:
+                default:
+                    symbol = '.';
+                    break;
+            }
+            out << symbol << " ";
+        }
+        out << std::endl;
+    }
+    return out;
 }
